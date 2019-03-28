@@ -1,0 +1,122 @@
+função Terminar(inteiro S)
+	se S = 1
+		então
+		escreva("Esse Grafo admite ciclos!");
+		Fim;
+	fim-se;
+	se S = 0
+		então
+		escreva("Esse Grafo não adimite ciclos!");
+		Fim;
+fim-função;
+
+Inicio
+	tipo MAT = matriz[1...10,1...10] de inteiros;
+	MAT M;
+
+	tipo NOS = vetor[1..10] de inteiros;
+	NOS ConexaoComOutros;
+
+	inteiro I,J,K,L;
+
+	//verificação de laços
+	para I de 1 até 10 faça
+		leia M[I,I];
+		se M[I,I] >= 1
+			então
+			Terminar(1);
+		fim-se;
+	fim-para;
+
+
+	//armazenamento de numero de arcos conectados a outros
+	para I de 1 até 10 faça
+		para J de 1 até I faça
+			se I /= J
+				então
+				leia M[I,J];
+				ConexaoComOutros[I] = M[I,J];
+			fim-se
+		fim-para;
+	fim-para;
+
+
+	//verificação de ciclos de 2 passos
+	para I de 1 até 10 faça
+		se ConexaoComOutros[I] >= 2
+			então
+			para J de 1 até I faça
+				se M[I,J] >=2
+					então
+					Terminar(1);
+				fim-se;
+			fim-para;
+		fim-se;
+	fim-para;
+
+	//verificação de ciclos de 3 ou mais passos
+	NOS aberturaNo;// 0: não acessado ainda, 1: Aberto, 2: Fechado
+	inteiro novoCaminho;
+
+	para I de 1 até 10 faça
+		aberturaNo[I] = 0;
+	fim-para;
+
+	para I de 1 até 10 faça //checando de nó em nó se há ciclos
+		
+		se aberturaNo[I] = 0 //vendo se o nó é um nó ainda não acessado, sem necessidade de verificar o mesmo no e possibilidade de ciclo 2 vezes
+			então
+			aberturaNo[I] =  2;
+			se ConexaoComOutros[I] >= 2 //se não tiver 2 conexões com outros, quer dizer que não pode fazer ciclo de 2 ou mais passos
+				então
+				novoCaminho = 1;
+				enquanto novoCaminho >= 1 //faz a checagem e executa até ver que não há mais novos caminhos
+					
+					novoCaminho = 0;
+
+					//marcando nós adjacentes de aberturaNo = 2 como abertos;
+					para J de 1 até 10 faça
+						se aberturaNo[J] = 2
+							então
+							para K de 1 até J faça
+								se aberturaNo[K] = 0 //Não pode fazer uma conexão com um nó já aberto, mesmo que tenha um arco usavel
+									então
+									se M[J,K] > 0 //ve se há conexão disponível entre os dois nós
+										então
+										aberturaNo[K] = 1;
+										novoCaminho = novoCaminho + 1;
+									fim-se;
+								fim-se;	
+							fim-para;
+						fim-se;
+					fim-para;
+
+					//verifica se dois aberturaNo = 1 estão conectados, se sim, ciclo admitido e programa terminado
+					para J de 1 até 10 faça
+						se aberturaNo[J] = 1
+							então
+							para K de 1 até J faça
+								se aberturaNo[K] = 1
+									então
+									se M[J,K] >= 1
+										Terminar(1);
+									fim-se;
+								fim-se;
+							fim-para;
+						fim-se;
+					fim-para;
+
+					//transferência para o estado fechado dos nos usados.
+					para J de 1 até 10 faça 
+						se aberturaNo[J] = 1
+							então
+							aberturaNo[J] = 2;
+						fim-se;
+					fim-para;
+				fim-enquanto;//fim do enquanto, se o programa chegar aqui é porque com o nó Base(I) não foi encontrado nenhum ciclo.
+			fim-se;
+		fim-se;	
+	fim-para;
+
+	Terminar(0);
+Fim;
