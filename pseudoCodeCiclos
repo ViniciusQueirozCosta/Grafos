@@ -80,13 +80,21 @@ Inicio
 							então
 							para K de 1 até J faça
 								se aberturaNo[K] = 0 //Não pode fazer uma conexão com um nó já aberto, mesmo que tenha um arco usavel
-									então
+								então
 									se M[J,K] > 0 //ve se há conexão disponível entre os dois nós
 										então
 										aberturaNo[K] = 1;
 										novoCaminho = novoCaminho + 1;
 									fim-se;
-								fim-se;	
+								senão
+									se aberturaNo[K] = 1 //verifica se o nó fechado tem conexão com um nó aberto, se sim, ciclo admitido.lo ad
+									então
+										se M[J,K] > 0
+										então
+											Terminar(1);
+										fim-se;
+									fim-se;
+								fim-se;
 							fim-para;
 						fim-se;
 					fim-para;
